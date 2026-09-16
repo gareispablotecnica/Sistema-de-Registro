@@ -35,13 +35,13 @@ export async function RegistrarProductos(req:Request,res:Response){
 export async function ModificarProducto(req:Request,res:Response){
     try{
         // --> Indicamos el Parametro a Comparar
-        const {Id}=req.params;
+        const {id}=req.params;
         const {codigo,nombre,descripcion,talle,precio,stock,imagen}=req.body;
         if(!codigo || !nombre){
             return res.status(400).json({Mensaje: 'Debe Completar los campos de Codigo y Nombre para continuar'})
         }
         // --> Verificamos si el ID se paso por parametro
-        if(!Id){
+        if(!id){
             console.error('No se encontro el ID')
             return res.status(400).json({error:'Debe Ingresar un ID para continuar'})
         }
@@ -56,7 +56,17 @@ export async function ModificarProducto(req:Request,res:Response){
         .input('stock',sql.Int,stock ?? 0)
         .input('imagen',sql.VarChar ,imagen ?? null)
 
-        .query('INSERT INTO Tarjetas (codigo,nombre,descripcion,talle,precio,stock,imagen)VALUES(@codigo,@nombre,@descripcion,@talle,@precio,@stock,@imagen)')
+        .query(`UPDATE Tarjetas
+                SET 
+                codigo=@Codigo,
+                nombre=@nombre,
+                descripcion=@descripcion,
+                talle=@talle,
+                precio=@precio,
+                stock=@stock,
+                imagen=@imagen
+                WHERE id=@id
+            `)
 
         return res.status(201).json({Mensaje:'Productos Registrado ✅'})
     }
