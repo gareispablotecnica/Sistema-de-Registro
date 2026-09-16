@@ -80,12 +80,14 @@ export async function ModificarProducto(req:Request,res:Response){
 }
 
 
-// --->Funcion de Modificacion de Productos
+// --->Funcion de Eliminacion de Productos
+
 
 export async function EliminarProducto(req:Request,res:Response){
     try{
         // --> Indicamos el Parametro a Comparar
         const {id}=req.params;
+
         // --> Verificamos si el ID se paso por parametro
         if(!id){
             console.error('No se encontro el ID')
@@ -93,16 +95,18 @@ export async function EliminarProducto(req:Request,res:Response){
         }
         const pool= await poolPromise;
         const Resultado=await pool.request()
-        .input('id',sql.Int,id)
         // -->db ,tipo ,parametro 
-        .query(`DELETE * FROM Tarjetas
+        .input('id',sql.Int,id)
+
+        .query(`DELETE FROM Tarjetas
                 WHERE id=@id
             `)
+
         if(Resultado.rowsAffected[0]===0){
             return res.status(404).json({error:'No se Logro Encontrar el Producto'})
         }
 
-        return res.status(201).json({Mensaje:'Productos Modificados Correctamente ✅'})
+        return res.status(201).json({Mensaje:'Productos Eliminados Correctamente ✅'})
     }
     catch(error){
         console.error('No se logro registrar el Producto')
