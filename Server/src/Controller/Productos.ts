@@ -46,7 +46,7 @@ export async function ModificarProducto(req:Request,res:Response){
             return res.status(400).json({error:'Debe Ingresar un ID para continuar'})
         }
         const pool= await poolPromise;
-        await pool.request()
+        const Resultado=await pool.request()
         // -->db ,tipo ,parametro 
         .input('codigo',sql.VarChar,codigo)
         .input('nombre',sql.VarChar,nombre)
@@ -67,8 +67,11 @@ export async function ModificarProducto(req:Request,res:Response){
                 imagen=@imagen
                 WHERE id=@id
             `)
+        if(Resultado.rowsAffected[0]===0){
+            return res.status(404).json({error:'No se Logro Encontrar el Producto'})
+        }
 
-        return res.status(201).json({Mensaje:'Productos Registrado ✅'})
+        return res.status(201).json({Mensaje:'Productos Modificados Correctamente ✅'})
     }
     catch(error){
         console.error('No se logro registrar el Producto')
