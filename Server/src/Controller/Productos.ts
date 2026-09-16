@@ -48,6 +48,7 @@ export async function ModificarProducto(req:Request,res:Response){
         const pool= await poolPromise;
         const Resultado=await pool.request()
         // -->db ,tipo ,parametro 
+        .input('id', sql.Int, id)
         .input('codigo',sql.VarChar,codigo)
         .input('nombre',sql.VarChar,nombre)
         .input('descripcion',sql.VarChar(sql.MAX),descripcion)
